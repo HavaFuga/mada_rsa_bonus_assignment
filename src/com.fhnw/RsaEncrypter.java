@@ -11,11 +11,21 @@ import java.util.Random;
 
 public class RsaEncrypter {
 
+
+
+    private void encrypt(String text) {
+
+    }
+
+
     public RsaEncrypter() {
         BigInteger n = getKeys("n");
         BigInteger e = getKeys("e");
 
         String text = getText();
+
+        encrypt(text);
+
 
         BigInteger message = new BigInteger(text.getBytes());
         BigInteger b = message.modPow(e,n);
@@ -71,42 +81,6 @@ public class RsaEncrypter {
         return text;
     }
 
-    private void convertStringToAscii(String text) {
-//        StringBuilder sb = new StringBuilder();
-//        for (char c : text.toCharArray()) {
-//            encrypt((int) c);
-//
-//            // convert every character into array
-//            sb.append(" " + (int) c);
-//        }
-//
-////        BigInteger mInt = new BigInteger(sb.toString());
-//        System.out.println(sb);
 
-    }
-
-    private void encrypt(String text, BigInteger e) {
-
-//        BigInteger n = new BigInteger("9516311845790656153499716760847001433441357");
-//        BigInteger e = new BigInteger("65537");
-//        BigInteger d = new BigInteger("5617843187844953170308463622230283376298685");
-//        Charset c = StandardCharsets.UTF_8;
-//        String plainText = "Rosetta Code";
-//        System.out.println("PlainText : " + plainText);
-//        byte[] bytes = plainText.getBytes();
-//        BigInteger plainNum = new BigInteger(bytes);
-//        System.out.println("As number : " + plainNum);
-//        BigInteger Bytes = new BigInteger(bytes);
-//        if (Bytes.compareTo(n) == 1) {
-//            System.out.println("Plaintext is too long");
-//            return;
-//        }
-//        BigInteger enc = plainNum.modPow(e, n);
-//        System.out.println("Encoded: " + enc);
-//        BigInteger dec = enc.modPow(d, n);
-//        System.out.println("Decoded: " + dec);
-//        String decText = new String(dec.toByteArray(), c);
-//        System.out.println("As text: " + decText);
-    }
 
 }

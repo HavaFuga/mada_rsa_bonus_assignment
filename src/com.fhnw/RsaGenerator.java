@@ -41,8 +41,7 @@ public class RsaGenerator {
 
         phiN = p.subtract(one).multiply(q.subtract(one));
         generateE(n, phiN);
-
-        euclid(n, e);
+        euclid(e, phiN);
 
         System.out.println("asdf");
 
@@ -88,8 +87,8 @@ public class RsaGenerator {
 //        );
     }
 
-    private void euclid(BigInteger n, BigInteger e) {
-        BigInteger a = n;
+    private void euclid(BigInteger e, BigInteger phiN) {
+        BigInteger a = phiN;
         BigInteger b = e;
         BigInteger x0 = one;
         BigInteger y0 = zero;
@@ -109,8 +108,8 @@ public class RsaGenerator {
             BigInteger oldY0 = y0;
             x0 = x1;
             y0 = y1;
-            x1 = oldX0.subtract(q.multiply(x0));
-            y1 = oldY0.subtract(q.multiply(y0));
+            x1 = oldX0.subtract(q.multiply(x1));
+            y1 = oldY0.subtract(q.multiply(y1));
         }
 
         if (y0.compareTo(zero) < 0) {
