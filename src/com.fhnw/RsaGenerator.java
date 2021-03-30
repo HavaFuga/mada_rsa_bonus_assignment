@@ -6,17 +6,6 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.util.Random;
 
-/*
-1. One can generate an RSA key pair of realistic size. Therefore, the following steps are
-        necessary:
-        - (a) Two different primes are created and multiplied using the class BigInteger.
-        - (b) A suitable e is chosen and the corresponding d is computed. In particular, you have
-        to implement the Extended Euclidean Algorithm.
-        - (c) The private key is stored in a file sk.txt in the form (n, d) with n and d in decimal
-        representation. The public key is stored in a file pk.txt in the form (n, e).
-*/
-
-
 public class RsaGenerator {
     private BigInteger n;
     private BigInteger q;
@@ -28,8 +17,7 @@ public class RsaGenerator {
     private BigInteger phiN;
 
     public RsaGenerator () {
-        System.out.println("1");
-
+        // 1. (a) Two different primes are created and multiplied using the class BigInteger
         p = BigInteger.probablePrime(1024, new Random());
         q = BigInteger.probablePrime(1024, new Random());
         // q and p should be two different primes
@@ -38,14 +26,16 @@ public class RsaGenerator {
         }
 
         n = p.multiply(q);
-
         phiN = p.subtract(one).multiply(q.subtract(one));
+
+        // 1. (b) A suitable e is chosen
         generateE(n, phiN);
+
+        // the corresponding d is computed. In particular, you have to implement the Extended Euclidean Algorithm.
         euclid(e, phiN);
 
-        System.out.println("asdf");
-
-
+        // 1. (c) The private key is stored in a file sk.txt in the form (n, d) with n and d in decimal representation.
+        // The public key is stored in a file pk.txt in the form (n, e).
         storeKey("public", n, e);
         storeKey("private", n, d);
     }
@@ -79,12 +69,6 @@ public class RsaGenerator {
 
     private void generateE(BigInteger n, BigInteger phiN) {
         e = n.subtract(phiN);
-//        do {
-//            e = BigInteger.probablePrime(1024, new Random());
-//        } while (e.compareTo(one) == 1
-//                && e.compareTo(phiN) == -1
-//                && e.gcd(phiN).equals(one)
-//        );
     }
 
     private void euclid(BigInteger e, BigInteger phiN) {

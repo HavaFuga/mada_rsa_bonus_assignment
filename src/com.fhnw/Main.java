@@ -6,18 +6,22 @@ import java.nio.charset.StandardCharsets;
 
 public class Main {
     public static void main(String[]args){
-        System.out.println("hii");
-        System.out.println("asdf");
+        System.out.println("The tasks will be executed automatically.");
 
         // Task 1
-        RsaGenerator rsa = new RsaGenerator();
+        System.out.println("Task 1");
+        new RsaGenerator();
 
         // Task 2
-        RsaEncrypter encrypter = new RsaEncrypter();
+        System.out.println("Task 2");
+        new RsaEncrypter();
 
         // Task 3
-        RsaDecrypter decrypter = new RsaDecrypter();
+        System.out.println("Task 3");
+        new RsaDecrypter("doc_rsa/task_2/cipher.txt", "doc_rsa/task_1/sk.txt", "doc_rsa/task_3/d-text.txt");
 
-
+        // Task 4
+        System.out.println("Task 4");
+        new RsaDecrypter("doc_rsa/task_4/cipher.txt", "doc_rsa/task_4/sk.txt", "doc_rsa/task_4/d-text.txt");
     }
 }

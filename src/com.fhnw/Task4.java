@@ -4,20 +4,14 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.math.BigInteger;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-public class RsaDecrypter {
-    private String fileText;
-    private String fileKeys;
-    private String fileDecryptedText;
-
-    public RsaDecrypter(String fileText, String fileKeys, String fileDecryptedText) {
-        this.fileText = fileText;
-        this.fileKeys = fileKeys;
-        this.fileDecryptedText = fileDecryptedText;
-
-        String encryptedText = getText(fileText);
+public class Task4 {
+    public Task4() {
+        String encryptedText = getText();
         BigInteger n = getKeys("n");
         BigInteger d = getKeys("d");
 
@@ -27,7 +21,7 @@ public class RsaDecrypter {
 
         BigInteger text;
         for (String b : bytesString) {
-            text = new BigInteger(b).modPow(d,n);
+            text = new BigInteger(b).modPow(d, n);
             BigInteger h = fastExponentiation(n, text, d);
             decryptedText += Character.toString((char) text.intValue());
         }
@@ -35,7 +29,7 @@ public class RsaDecrypter {
         System.out.println(decryptedText);
 
         // 3. One can decrypt a file cipher.txt with a private key in sk.txt and store the resulting plain text in text-d.txt
-        File file = new File(fileDecryptedText);
+        File file = new File("doc_rsa/task_4/text-d.txt");
 
         try {
             FileWriter w = new FileWriter(file);
@@ -46,7 +40,6 @@ public class RsaDecrypter {
             ioException.printStackTrace();
         }
     }
-
 
     private BigInteger fastExponentiation(BigInteger modulo, BigInteger number, BigInteger exponent) {
         int i = exponent.bitLength() - 1;
@@ -66,11 +59,10 @@ public class RsaDecrypter {
         return h;
     }
 
-
     private BigInteger getKeys(String x) {
         String file = "";
         try {
-            file = new String(Files.readAllBytes(Paths.get(fileKeys)));
+            file = new String(Files.readAllBytes(Paths.get("doc_rsa/task_4/sk.txt")));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -79,19 +71,19 @@ public class RsaDecrypter {
 
         switch (x) {
             case "n":
-                return new BigInteger(values[0].replaceAll("\\p{P}",""));
+                return new BigInteger(values[0].replaceAll("\\p{P}", ""));
             case "d":
-                return new BigInteger(values[1].replaceAll("\\p{P}",""));
+                return new BigInteger(values[1].replaceAll("\\p{P}", ""));
             default:
                 System.out.println("cry on the floor");
                 return null;
         }
     }
 
-    private String getText(String file) {
+    private String getText() {
         String text = null;
         try {
-            text = new String(Files.readAllBytes(Paths.get(file)));
+            text = new String(Files.readAllBytes(Paths.get("doc_rsa/task_4/cipher.txt")));
         } catch (IOException e) {
             e.printStackTrace();
         }

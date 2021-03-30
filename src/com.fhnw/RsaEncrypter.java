@@ -2,52 +2,59 @@ package com.fhnw;
 
 import java.io.*;
 import java.math.BigInteger;
-import java.nio.charset.Charset;
-import java.nio.charset.CharsetEncoder;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Random;
 
 public class RsaEncrypter {
-
-
-
-    private void encrypt(String text) {
-
-    }
-
 
     public RsaEncrypter() {
         BigInteger n = getKeys("n");
         BigInteger e = getKeys("e");
 
+        // 2. (a) One reads in a public key from a file pk.txt
         String text = getText();
 
-        encrypt(text);
+        // 2. (b) Every character of text.txt is converted to its ASCII code (number between 0 and 127).
+        byte[] bytes = text.getBytes();
 
-
-        BigInteger message = new BigInteger(text.getBytes());
-        BigInteger b = message.modPow(e,n);
-
-        byte[] asciiText = text.getBytes(StandardCharsets.US_ASCII);
         String encryptedText = "";
-        for (byte x : asciiText) {
-            encryptedText += new BigInteger(String.valueOf(x)).modPow(e,n) + ",";
+
+        // 2. (c) Every such number is encrypted with the RSA scheme.
+        for (byte b : bytes) {
+            BigInteger h = fastExponentiation(n, b, e);
+            BigInteger hEncrypted = BigInteger.valueOf(b).modPow(e,n);
+            encryptedText += hEncrypted + ",";
         }
 
         File file = new File("doc_rsa/task_2/cipher.txt");
 
+        // 2. (d) The encryptions are stored in a file cipher.txt (in decimal representation and separated by a comma)
         try {
             FileWriter w = new FileWriter(file);
-            w.write(b.toString());
+            w.write(encryptedText);
             w.flush();
             w.close();
         } catch (IOException ioException) {
             ioException.printStackTrace();
         }
+    }
 
+    private BigInteger fastExponentiation(BigInteger modulo, byte number, BigInteger exponent) {
+        int i = exponent.bitLength() - 1;
+        BigInteger h = BigInteger.ONE;
+        BigInteger k = new BigInteger(String.valueOf(number));
+        String bA = exponent.toString(2);
+        char[] ch = bA.toCharArray();
 
+        while (i >= 0) {
+            if (ch[i] == '1') {
+                h = h.multiply(k).mod(modulo);
+            }
+            k = k.sqrt().mod(modulo);
+            i--;
+        }
+
+        return h;
     }
 
     private BigInteger getKeys(String x) {
