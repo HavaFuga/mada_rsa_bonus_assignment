@@ -6,6 +6,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 public class RsaEncrypter {
+    private BigInteger one = BigInteger.ONE;
 
     public RsaEncrypter() {
         BigInteger n = getKeys("n");
@@ -41,13 +42,13 @@ public class RsaEncrypter {
 
     private BigInteger fastExponentiation(BigInteger modulo, byte number, BigInteger exponent) {
         int i = exponent.bitLength() - 1;
-        BigInteger h = BigInteger.ONE;
+        BigInteger h = one;
         BigInteger k = new BigInteger(String.valueOf(number));
-        String bA = exponent.toString(2);
-        char[] ch = bA.toCharArray();
+        String ascii = exponent.toString(2);    // binary
+        char[] ch = ascii.toCharArray();
 
         while (i >= 0) {
-            if (ch[i] == '1') {
+            if (ch[i] == '1') {     // only multiply if 1
                 h = h.multiply(k).mod(modulo);
             }
             k = k.sqrt().mod(modulo);

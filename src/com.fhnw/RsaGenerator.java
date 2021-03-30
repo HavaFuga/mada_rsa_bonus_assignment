@@ -17,19 +17,24 @@ public class RsaGenerator {
     private BigInteger phiN;
 
     public RsaGenerator () {
+        generateVariables();
+    }
+
+    private void generateVariables() {
         // 1. (a) Two different primes are created and multiplied using the class BigInteger
-        p = BigInteger.probablePrime(1024, new Random());
-        q = BigInteger.probablePrime(1024, new Random());
+        p = BigInteger.probablePrime(1024 , new Random()); // 1024 Bit = 128 Byte (ex: 0111)
+        q = BigInteger.probablePrime(1024 , new Random());
+
         // q and p should be two different primes
         while (q == p) {
-            q = BigInteger.probablePrime(1024, new Random());
+            q = BigInteger.probablePrime(1024 , new Random());
         }
 
-        n = p.multiply(q);
         phiN = p.subtract(one).multiply(q.subtract(one));
+        n = p.multiply(q);
 
         // 1. (b) A suitable e is chosen
-        generateE(n, phiN);
+        e = n.subtract(phiN);
 
         // the corresponding d is computed. In particular, you have to implement the Extended Euclidean Algorithm.
         euclid(e, phiN);
@@ -67,10 +72,6 @@ public class RsaGenerator {
         }
     }
 
-    private void generateE(BigInteger n, BigInteger phiN) {
-        e = n.subtract(phiN);
-    }
-
     private void euclid(BigInteger e, BigInteger phiN) {
         BigInteger a = phiN;
         BigInteger b = e;
@@ -81,13 +82,13 @@ public class RsaGenerator {
         BigInteger q;
         BigInteger r;
 
-        while (b.compareTo(BigInteger.ZERO) != 0) {
+        while (b.compareTo(zero) != 0) {
             q = a.divide(b);
             r = a.mod(b);
             a = b;
             b = r;
 
-            // bigint that are needed temporary for new x1' and y1'
+            // variables that are needed temporary for new x1' and y1'
             BigInteger oldX0 = x0;
             BigInteger oldY0 = y0;
             x0 = x1;
@@ -96,10 +97,10 @@ public class RsaGenerator {
             y1 = oldY0.subtract(q.multiply(y1));
         }
 
-        if (y0.compareTo(zero) < 0) {
-            d = y0.add(phiN);
-        } else {
+        if (y0.compareTo(zero) == -1) {
             d = y0;
+        } else {
+            d = y0.add(phiN);
         }
 
     }
