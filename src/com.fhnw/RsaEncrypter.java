@@ -22,9 +22,9 @@ public class RsaEncrypter {
 
         // 2. (c) Every such number is encrypted with the RSA scheme.
         for (byte b : bytes) {
-            BigInteger h = fastExponentiation(n, b, e);
-            BigInteger hEncrypted = BigInteger.valueOf(b).modPow(e,n);
-            encryptedText += hEncrypted + ",";
+            BigInteger hWithFastExp = fastExponentiation(n, BigInteger.valueOf(b), e);
+            BigInteger h = BigInteger.valueOf(b).modPow(e,n);
+            encryptedText += h + ",";
         }
 
         File file = new File("doc_rsa/task_2/cipher.txt");
@@ -40,21 +40,18 @@ public class RsaEncrypter {
         }
     }
 
-    private BigInteger fastExponentiation(BigInteger modulo, byte number, BigInteger exponent) {
-        int i = exponent.bitLength() - 1;
+    private BigInteger fastExponentiation(BigInteger modulo, BigInteger number, BigInteger exponent) {
+        int i = exponent.bitLength() - 1; // b(l)
         BigInteger h = one;
-        BigInteger k = new BigInteger(String.valueOf(number));
-        String ascii = exponent.toString(2);    // binary
-        char[] ch = ascii.toCharArray();
+        BigInteger k = number;
 
         while (i >= 0) {
-            if (ch[i] == '1') {     // only multiply if 1
+            if (exponent.testBit(i)) {     // only multiply if 1
                 h = h.multiply(k).mod(modulo);
             }
             k = k.sqrt().mod(modulo);
             i--;
         }
-
         return h;
     }
 

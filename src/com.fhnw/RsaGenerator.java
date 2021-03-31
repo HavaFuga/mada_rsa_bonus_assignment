@@ -97,10 +97,10 @@ public class RsaGenerator {
             y1 = oldY0.subtract(q.multiply(y1));
         }
 
-        if (y0.compareTo(zero) == -1) {
-            d = y0;
-        } else {
+        if (y0.compareTo(zero) < 0) {
             d = y0.add(phiN);
+        } else {
+            d = y0;
         }
 
     }

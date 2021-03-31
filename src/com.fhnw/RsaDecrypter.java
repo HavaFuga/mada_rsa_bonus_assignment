@@ -26,11 +26,11 @@ public class RsaDecrypter {
 
         String decryptedText = "";
 
-        BigInteger text;
+        BigInteger h;
         for (String b : bytesString) {
-            text = new BigInteger(b).modPow(d,n);
-            BigInteger h = fastExponentiation(n, text, d);
-            decryptedText += Character.toString((char) text.intValue());
+            h = new BigInteger(b).modPow(d,n);
+            BigInteger hWithFastExp = fastExponentiation(n, new BigInteger(b), d);
+            decryptedText += Character.toString((char) h.intValue());
         }
 
         System.out.println(decryptedText);
@@ -48,22 +48,18 @@ public class RsaDecrypter {
         }
     }
 
-
     private BigInteger fastExponentiation(BigInteger modulo, BigInteger number, BigInteger exponent) {
-        int i = exponent.bitLength() - 1;
+        int i = exponent.bitLength() - 1; // b(l)
         BigInteger h = one;
         BigInteger k = number;
-        String ascii = exponent.toString(2);    // binary
-        char[] ch = ascii.toCharArray();
 
         while (i >= 0) {
-            if (ch[i] == '1') {     // only multiply if 1
+            if (exponent.testBit(i)) {     // only multiply if 1
                 h = h.multiply(k).mod(modulo);
             }
             k = k.sqrt().mod(modulo);
             i--;
         }
-
         return h;
     }
 
