@@ -6,7 +6,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 public class RsaEncrypter {
-    private BigInteger one = BigInteger.ONE;
+    private final BigInteger one = BigInteger.ONE;
 
     public RsaEncrypter() {
         BigInteger n = getKeys("n");
@@ -23,8 +23,8 @@ public class RsaEncrypter {
         // 2. (c) Every such number is encrypted with the RSA scheme.
         for (byte b : bytes) {
             BigInteger hWithFastExp = fastExponentiation(n, BigInteger.valueOf(b), e);
-            BigInteger h = BigInteger.valueOf(b).modPow(e,n);
-            encryptedText += h + ",";
+            BigInteger h = BigInteger.valueOf(b).modPow(e,n); // also possible with method .modPow(key,n)
+            encryptedText += hWithFastExp + ",";
         }
 
         File file = new File("doc_rsa/task_2/cipher.txt");
@@ -42,14 +42,16 @@ public class RsaEncrypter {
 
     private BigInteger fastExponentiation(BigInteger modulo, BigInteger number, BigInteger exponent) {
         int i = exponent.bitLength() - 1; // b(l)
-        BigInteger h = one;
+        BigInteger h = BigInteger.ONE;
         BigInteger k = number;
+        String bA = exponent.toString(2);
+        char[] ch = bA.toCharArray();
 
         while (i >= 0) {
-            if (exponent.testBit(i)) {     // only multiply if 1
+            if (ch[i] == '1') {
                 h = h.multiply(k).mod(modulo);
             }
-            k = k.sqrt().mod(modulo);
+            k = k.pow(2).mod(modulo);
             i--;
         }
         return h;

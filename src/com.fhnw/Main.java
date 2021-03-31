@@ -1,9 +1,5 @@
 package com.fhnw;
 
-import java.math.BigInteger;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-
 public class Main {
     public static void main(String[]args){
         System.out.println("The tasks will be executed automatically.");

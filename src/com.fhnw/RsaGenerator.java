@@ -7,13 +7,9 @@ import java.math.BigInteger;
 import java.util.Random;
 
 public class RsaGenerator {
-    private BigInteger n;
-    private BigInteger q;
-    private BigInteger p;
-    private BigInteger e;
     private BigInteger d;
-    private BigInteger one = BigInteger.ONE;
-    private BigInteger zero = BigInteger.ZERO;
+    private final BigInteger one = BigInteger.ONE;
+    private final BigInteger zero = BigInteger.ZERO;
     private BigInteger phiN;
 
     public RsaGenerator () {
@@ -22,19 +18,20 @@ public class RsaGenerator {
 
     private void generateVariables() {
         // 1. (a) Two different primes are created and multiplied using the class BigInteger
-        p = BigInteger.probablePrime(1024 , new Random()); // 1024 Bit = 128 Byte (ex: 0111)
-        q = BigInteger.probablePrime(1024 , new Random());
+        BigInteger p = BigInteger.probablePrime(1024, new Random()); // 1024 Bit = 128 Byte
+
+        BigInteger q = BigInteger.probablePrime(1024, new Random());
 
         // q and p should be two different primes
-        while (q == p) {
+        while (q.equals(p)) {
             q = BigInteger.probablePrime(1024 , new Random());
         }
 
         phiN = p.subtract(one).multiply(q.subtract(one));
-        n = p.multiply(q);
+        BigInteger n = p.multiply(q);
 
         // 1. (b) A suitable e is chosen
-        e = n.subtract(phiN);
+        BigInteger e = n.subtract(phiN);
 
         // the corresponding d is computed. In particular, you have to implement the Extended Euclidean Algorithm.
         euclid(e, phiN);
@@ -97,7 +94,7 @@ public class RsaGenerator {
             y1 = oldY0.subtract(q.multiply(y1));
         }
 
-        if (y0.compareTo(zero) < 0) {
+        if (y0.compareTo(zero) < 0) { // if y0 is negative add phi(n)
             d = y0.add(phiN);
         } else {
             d = y0;
